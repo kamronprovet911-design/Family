@@ -1,13 +1,15 @@
+@import 'leaflet/dist/leaflet.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root { --tg-bg: #f5f7fb; --tg-card: #fff; --tg-text: #162033; --tg-muted: #718096; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { min-height: 100%; overflow: hidden; }
 body { margin: 0; background: var(--tg-bg); color: var(--tg-text); font-family: Arial, Helvetica, sans-serif; }
 button, input { font: inherit; } button { cursor: pointer; }
-.app-shell { max-width: 680px; min-height: 100dvh; margin: auto; background: var(--tg-bg); padding-bottom: 86px; }
+.app-shell { max-width: 680px; min-height: 100dvh; margin: auto; background: var(--tg-bg); padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 .leaflet-container { height: 100%; width: 100%; font-family: inherit; }
 .map-pin { border: 3px solid white; border-radius: 999px; box-shadow: 0 4px 12px #16203355; }
-.safe-bottom { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+.safe-bottom { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
 @media (prefers-color-scheme: dark) { :root { --tg-bg:#111827; --tg-card:#1f2937; --tg-text:#f8fafc; --tg-muted:#94a3b8; } }
