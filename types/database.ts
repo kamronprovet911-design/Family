@@ -1,0 +1,3 @@
+export type AppUser = { id: string; family_id: string | null; telegram_id: string; username: string | null; display_name: string; avatar_url: string | null; role: 'admin' | 'member'; last_seen: string; location_sharing_enabled: boolean; online: boolean };
+export type Location = { user_id: string; latitude: number; longitude: number; accuracy: number | null; updated_at: string; user?: AppUser };
+export type Message = { id: string; family_id: string; sender_id: string; receiver_id: string | null; type: 'text'|'audio'|'sticker'|'image'|'location'; text: string | null; audio_url: string | null; sticker_id: string | null; image_url: string | null; latitude: number | null; longitude: number | null; created_at: string; read_at: string | null; sender?: AppUser };
