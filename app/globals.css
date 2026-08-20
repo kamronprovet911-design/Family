@@ -11,5 +11,11 @@ button, input { font: inherit; } button { cursor: pointer; }
 .app-shell { max-width: 680px; min-height: 100dvh; margin: auto; background: var(--tg-bg); padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 .leaflet-container { height: 100%; width: 100%; font-family: inherit; }
 .map-pin { border: 3px solid white; border-radius: 999px; box-shadow: 0 4px 12px #16203355; }
+.family-bubble { display:flex; align-items:center; justify-content:center; width:46px; height:46px; border:3px solid #fff; border-radius:999px; box-shadow:0 5px 16px rgba(22,32,51,.32); overflow:hidden; background:#377dff; color:#fff; font-weight:800; }
+.family-bubble span { display:grid; place-items:center; width:100%; height:100%; border-radius:999px; border:1px solid rgba(255,255,255,.85); color:#fff; font-size:16px; }
+.family-bubble--group { width:58px; height:58px; padding:3px; background:#fff; overflow:visible; }
+.family-bubble--group span { width:25px; height:25px; margin-left:-7px; font-size:10px; }
+.family-bubble--group span:first-child { margin-left:0; }
+.family-bubble--group i { display:grid; place-items:center; position:absolute; right:-5px; bottom:-5px; width:22px; height:22px; border:2px solid #fff; border-radius:999px; background:#162033; color:#fff; font-size:9px; font-style:normal; }
 .safe-bottom { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
 @media (prefers-color-scheme: dark) { :root { --tg-bg:#111827; --tg-card:#1f2937; --tg-text:#f8fafc; --tg-muted:#94a3b8; } }
