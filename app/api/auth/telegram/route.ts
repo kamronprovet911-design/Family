@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminSupabase } from '@/lib/supabase/server';
 import { validateTelegramInitData } from '@/lib/telegram';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const { initData } = await request.json(); const tg = validateTelegramInitData(initData);
   if (!tg) return NextResponse.json({ error: 'Неверные или устаревшие данные Telegram' }, { status: 401 });
@@ -16,5 +19,6 @@ export async function POST(request: NextRequest) {
   await db.from('users').upsert({ id: authUser.id, telegram_id: String(tg.id), username: tg.username ?? null, display_name: [tg.first_name, tg.last_name].filter(Boolean).join(' ') || 'Участник', avatar_url: tg.photo_url ?? null, last_seen: new Date().toISOString(), online: true }, { onConflict: 'id' });
   const link = await db.auth.admin.generateLink({ type: 'magiclink', email });
   if (link.error) return NextResponse.json({ error: link.error.message }, { status: 500 });
-  return NextResponse.json({ email, token_hash: link.data.properties.hashed_token });
+  // The browser must receive no identity fields here: Supabase verifyOtp accepts only token_hash + type.
+  return NextResponse.json({ token_hash: link.data.properties.hashed_token }, { headers: { 'Cache-Control': 'no-store' } });
 }
