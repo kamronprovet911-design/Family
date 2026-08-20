@@ -4,7 +4,9 @@ import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/lib/supabase/client';
+import { BackgroundLocation } from '@/lib/background-location';
 import type { AppUser, Location } from '@/types/database';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FamilySetup } from '@/components/FamilySetup';
@@ -62,6 +64,19 @@ function MapScreen() {
     document.addEventListener('visibilitychange', onVisible);
     return () => { if (timer.current) clearInterval(timer.current); document.removeEventListener('visibilitychange', onVisible); };
   }, [me?.id, me?.location_sharing_enabled, updateLocation]);
+
+  useEffect(() => {
+    if (!me || !Capacitor.isNativePlatform()) return;
+    let cancelled = false;
+    (async () => {
+      const permission = await navigator.permissions?.query?.({ name: 'geolocation' as PermissionName }).catch(() => null);
+      if (permission?.state === 'denied') { setLocationError('Разреши геолокацию в настройках Android для фонового обновления.'); return; }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || cancelled) return;
+      await BackgroundLocation.start({ supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!, anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, accessToken: session.access_token, userId: me.id });
+    })().catch(() => setLocationError('Не удалось запустить фоновую геолокацию.'));
+    return () => { cancelled = true; };
+  }, [me?.id]);
 
   if (!me) return null;
   if (!me.family_id) return <FamilySetup onDone={load} />;
